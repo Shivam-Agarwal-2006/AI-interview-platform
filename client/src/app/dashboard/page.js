@@ -14,8 +14,9 @@ export default function Dashboard() {
 
     const [loading, setLoading] = useState(false);
 
-    const [analysis, setAnalysis] = useState("");
+    const [analysis, setAnalysis] = useState(null);
 
+    const [history, setHistory] = useState([]);
     useEffect(() => {
 
         const token = localStorage.getItem("token");
@@ -29,7 +30,7 @@ export default function Dashboard() {
         if (storedUser) {
             setUser(JSON.parse(storedUser));
         }
-
+        fetchHistory();
     }, []);
 
     const handleUpload = async () => {
@@ -44,7 +45,7 @@ export default function Dashboard() {
             setLoading(true);
 
             const formData = new FormData();
-
+            const token = localStorage.getItem("token");
             formData.append("resume", file);
 
             const res = await axios.post(
@@ -52,6 +53,7 @@ export default function Dashboard() {
                 formData,
                 {
                     headers: {
+                        Authorization: `Bearer ${token}`,
                         "Content-Type": "multipart/form-data",
                     },
                 }
@@ -78,7 +80,28 @@ export default function Dashboard() {
 
         router.push("/login");
     };
+    const fetchHistory = async () => {
 
+        try {
+
+            const token = localStorage.getItem("token");
+
+            const res = await axios.get(
+                "http://localhost:5000/api/interviews",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            setHistory(res.data);
+
+        } catch (error) {
+
+            console.log(error);
+        }
+    };
     return (
 
         <div className="min-h-screen bg-gray-100 text-black p-10">
@@ -158,19 +181,150 @@ export default function Dashboard() {
 
             {analysis && (
 
-                <div className="bg-white p-8 rounded-2xl shadow-lg mt-10">
+                <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
 
-                    <h2 className="text-3xl font-bold mb-6">
-                        AI Analysis
-                    </h2>
 
-                    <div className="whitespace-pre-wrap text-gray-800 leading-8 text-lg">
-                        {analysis}
+                    {/* QUESTIONS */}
+
+                    <div className="bg-white p-8 rounded-2xl shadow-lg">
+
+                        <h2 className="text-2xl font-bold mb-6 text-blue-600">
+                            Technical Questions
+                        </h2>
+
+                        <ul className="space-y-4">
+
+                            {analysis.questions.map((question, index) => (
+
+                                <li
+                                    key={index}
+                                    className="bg-gray-100 p-4 rounded-lg"
+                                >
+                                    {question}
+                                </li>
+                            ))}
+
+                        </ul>
+
+                    </div>
+
+
+                    {/* STRENGTHS */}
+
+                    <div className="bg-white p-8 rounded-2xl shadow-lg">
+
+                        <h2 className="text-2xl font-bold mb-6 text-green-600">
+                            Strengths
+                        </h2>
+
+                        <ul className="space-y-4">
+
+                            {analysis.strengths.map((strength, index) => (
+
+                                <li
+                                    key={index}
+                                    className="bg-green-100 p-4 rounded-lg"
+                                >
+                                    {strength}
+                                </li>
+                            ))}
+
+                        </ul>
+
+                    </div>
+
+
+                    {/* WEAKNESSES */}
+
+                    <div className="bg-white p-8 rounded-2xl shadow-lg">
+
+                        <h2 className="text-2xl font-bold mb-6 text-red-600">
+                            Weaknesses
+                        </h2>
+
+                        <ul className="space-y-4">
+
+                            {analysis.weaknesses.map((weakness, index) => (
+
+                                <li
+                                    key={index}
+                                    className="bg-red-100 p-4 rounded-lg"
+                                >
+                                    {weakness}
+                                </li>
+                            ))}
+
+                        </ul>
+
+                    </div>
+
+
+                    {/* ROLES */}
+
+                    <div className="bg-white p-8 rounded-2xl shadow-lg">
+
+                        <h2 className="text-2xl font-bold mb-6 text-purple-600">
+                            Suggested Roles
+                        </h2>
+
+                        <ul className="space-y-4">
+
+                            {analysis.roles.map((role, index) => (
+
+                                <li
+                                    key={index}
+                                    className="bg-purple-100 p-4 rounded-lg"
+                                >
+                                    {role}
+                                </li>
+                            ))}
+
+                        </ul>
+
                     </div>
 
                 </div>
             )}
+            {history.length > 0 && (
 
+                <div className="mt-16">
+
+                    <h2 className="text-4xl font-bold mb-8">
+                        Previous Analyses
+                    </h2>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        {history.map((item) => (
+
+                            <div
+                                key={item._id}
+                                className="bg-white p-6 rounded-2xl shadow-lg"
+                            >
+
+                                <h3 className="text-2xl font-bold mb-3">
+                                    {item.resumeName}
+                                </h3>
+
+                                <p className="text-gray-600">
+                                    Questions Generated:
+                                    {" "}
+                                    {item.analysis.questions.length}
+                                </p>
+
+                                <p className="text-gray-600 mt-2">
+                                    Suggested Roles:
+                                    {" "}
+                                    {item.analysis.roles.join(", ")}
+                                </p>
+
+                            </div>
+                        ))}
+
+                    </div>
+
+                </div>
+            )}
         </div>
     );
 }

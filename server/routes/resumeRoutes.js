@@ -1,6 +1,6 @@
 const express = require("express");
 const multer = require("multer");
-
+const authMiddleware = require("../middleware/authMiddleware");
 const {
     uploadResume,
 } = require("../controllers/resumeController");
@@ -26,6 +26,7 @@ const upload = multer({ storage });
 // route
 router.post(
     "/upload",
+    authMiddleware,
     upload.single("resume"),
     uploadResume
 );

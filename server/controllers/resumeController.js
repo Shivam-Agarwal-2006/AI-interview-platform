@@ -1,6 +1,6 @@
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
-
+const Interview = require("../models/Interview");
 const { GoogleGenAI } = require("@google/genai");
 
 const ai = new GoogleGenAI({
@@ -31,12 +31,22 @@ exports.uploadResume = async (req, res) => {
 
         // prompt
         const prompt = `
-        Analyze this resume and generate:
+        Analyze this resume and return ONLY valid JSON.
 
-        1. 5 technical interview questions
-        2. 3 strengths
-        3. 3 weaknesses
-        4. Suggested job roles
+        Format:
+
+        {
+        "questions": [],
+        "strengths": [],
+        "weaknesses": [],
+        "roles": []
+        }
+
+        Generate:
+        - 5 technical interview questions
+        - 3 strengths
+        - 3 weaknesses
+        - 3 suggested job roles
 
         Resume:
         ${resumeText}
@@ -47,8 +57,22 @@ exports.uploadResume = async (req, res) => {
             contents: prompt,
         });
 
-        const response = result.text;
+        const rawText = result.text;
 
+        const cleanedText = rawText
+            .replace(/```json/g, "")
+            .replace(/```/g, "")
+            .trim();
+
+        const response = JSON.parse(cleanedText);
+        await Interview.create({
+
+            user: req.user.id,
+
+            resumeName: file.originalname,
+
+            analysis: response,
+        });
         res.status(200).json({
             message: "Resume analyzed successfully",
             analysis: response,
