@@ -60,6 +60,10 @@ export default function Dashboard() {
             );
 
             setAnalysis(res.data.analysis);
+            localStorage.setItem(
+                "analysis",
+                JSON.stringify(res.data.analysis)
+            );
 
         } catch (error) {
 
@@ -370,6 +374,16 @@ export default function Dashboard() {
 
                 </div>
             )}
+            <div className="mt-10 flex justify-center">
+
+                <button
+                    onClick={() => window.location.href = "/mock-interview"}
+                    className="bg-black text-white px-10 py-4 rounded-xl text-xl font-semibold hover:bg-gray-800"
+                >
+                    Start Mock Interview
+                </button>
+
+            </div>
             {history.length > 0 && (
 
                 <div className="mt-16">

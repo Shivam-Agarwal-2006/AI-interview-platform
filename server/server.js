@@ -6,6 +6,9 @@ require("dotenv").config();
 const authRoutes = require("./routes/authRoutes");
 const resumeRoutes = require("./routes/resumeRoutes");
 const interviewRoutes = require("./routes/interviewRoutes");
+const mockInterviewRoutes = require(
+    "./routes/mockInterviewRoutes"
+);
 const app = express();
 
 app.use(cors());
@@ -13,7 +16,10 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/resume", resumeRoutes);
 app.use("/api/interviews", interviewRoutes);
-
+app.use(
+    "/api/interview",
+    mockInterviewRoutes
+);
 app.get("/", (req, res) => {
     res.send("API Running...");
 });
