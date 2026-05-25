@@ -178,7 +178,92 @@ export default function Dashboard() {
 
 
             {/* ANALYSIS */}
+            {analysis && (
 
+                <div className="bg-white p-8 rounded-2xl shadow-lg mt-10">
+
+                    <div className="flex flex-col items-center">
+
+                        <h2 className="text-4xl font-bold mb-4">
+                            Resume Score
+                        </h2>
+
+                        <div className="w-full bg-gray-200 rounded-full h-8 overflow-hidden">
+
+                            <div
+                                className="bg-green-500 h-8 flex items-center justify-center text-white font-bold transition-all duration-1000"
+                                style={{
+                                    width: `${analysis.score}%`,
+                                }}
+                            >
+                                {analysis.score}%
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    {/* CATEGORY SCORES */}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+
+
+                        <div className="bg-blue-100 p-6 rounded-xl">
+
+                            <h3 className="text-xl font-bold mb-3">
+                                Technical Skills
+                            </h3>
+
+                            <p className="text-3xl font-bold text-blue-700">
+                                {analysis.skillsScore}/100
+                            </p>
+
+                        </div>
+
+
+                        <div className="bg-purple-100 p-6 rounded-xl">
+
+                            <h3 className="text-xl font-bold mb-3">
+                                Projects
+                            </h3>
+
+                            <p className="text-3xl font-bold text-purple-700">
+                                {analysis.projectsScore}/100
+                            </p>
+
+                        </div>
+
+
+                        <div className="bg-green-100 p-6 rounded-xl">
+
+                            <h3 className="text-xl font-bold mb-3">
+                                Experience
+                            </h3>
+
+                            <p className="text-3xl font-bold text-green-700">
+                                {analysis.experienceScore}/100
+                            </p>
+
+                        </div>
+
+
+                        <div className="bg-red-100 p-6 rounded-xl">
+
+                            <h3 className="text-xl font-bold mb-3">
+                                Communication
+                            </h3>
+
+                            <p className="text-3xl font-bold text-red-700">
+                                {analysis.communicationScore}/100
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            )}
             {analysis && (
 
                 <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">

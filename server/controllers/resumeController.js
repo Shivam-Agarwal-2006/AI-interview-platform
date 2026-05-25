@@ -31,26 +31,34 @@ exports.uploadResume = async (req, res) => {
 
         // prompt
         const prompt = `
-        Analyze this resume and return ONLY valid JSON.
+Analyze this resume and respond ONLY in valid JSON format.
 
-        Format:
+Return:
 
-        {
-        "questions": [],
-        "strengths": [],
-        "weaknesses": [],
-        "roles": []
-        }
+{
+  "score": number,
+  "skillsScore": number,
+  "projectsScore": number,
+  "experienceScore": number,
+  "communicationScore": number,
 
-        Generate:
-        - 5 technical interview questions
-        - 3 strengths
-        - 3 weaknesses
-        - 3 suggested job roles
+  "questions": [],
+  "strengths": [],
+  "weaknesses": [],
+  "roles": []
+}
 
-        Resume:
-        ${resumeText}
-        `;
+Rules:
+- score should be out of 100
+- category scores should be out of 100
+- generate 5 interview questions
+- generate 3 strengths
+- generate 3 weaknesses
+- generate 3 suitable roles
+
+Resume Text:
+${resumeText}
+`;
 
         const result = await ai.models.generateContent({
             model: "gemini-2.5-flash",
