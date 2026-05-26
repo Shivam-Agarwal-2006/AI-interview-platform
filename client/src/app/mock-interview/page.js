@@ -10,7 +10,11 @@ export default function MockInterviewPage() {
     const [answer, setAnswer] = useState("");
     const [feedback, setFeedback] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [allAnswers, setAllAnswers] = useState([]);
 
+    const [totalScore, setTotalScore] = useState(0);
+
+    const [interviewCompleted, setInterviewCompleted] = useState(false);
     useEffect(() => {
 
         const savedAnalysis = localStorage.getItem("analysis");
@@ -49,7 +53,18 @@ export default function MockInterviewPage() {
             );
 
             setFeedback(res.data);
+            setAllAnswers((prev) => [
+                ...prev,
+                {
+                    question: questions[currentQuestionIndex],
+                    answer,
+                    feedback: res.data.feedback,
+                    improvement: res.data.improvement,
+                    score: res.data.score,
+                },
+            ]);
 
+            setTotalScore((prev) => prev + res.data.score);
         } catch (error) {
 
             console.log(error);
@@ -64,6 +79,13 @@ export default function MockInterviewPage() {
 
 
     const nextQuestion = () => {
+
+        if (currentQuestionIndex === questions.length - 1) {
+
+            setInterviewCompleted(true);
+
+            return;
+        }
 
         setAnswer("");
         setFeedback(null);
@@ -83,7 +105,130 @@ export default function MockInterviewPage() {
             </div>
         );
     }
+    if (interviewCompleted) {
 
+        const averageScore = (
+            totalScore / questions.length
+        ).toFixed(1);
+
+        return (
+
+            <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white p-10">
+
+                <div className="max-w-5xl mx-auto">
+
+                    {/* HEADER */}
+
+                    <div className="text-center mb-14">
+
+                        <h1 className="text-6xl font-bold mb-6">
+                            Interview Completed
+                        </h1>
+
+                        <p className="text-gray-400 text-xl">
+                            Here is your final AI interview report
+                        </p>
+
+                    </div>
+
+
+                    {/* FINAL SCORE */}
+
+                    <div className="bg-gradient-to-r from-blue-600 to-purple-700 rounded-3xl p-10 mb-12 shadow-2xl">
+
+                        <h2 className="text-3xl font-bold mb-4">
+                            Final Average Score
+                        </h2>
+
+                        <p className="text-7xl font-bold">
+                            {averageScore}/10
+                        </p>
+
+                    </div>
+
+
+                    {/* ANSWER HISTORY */}
+
+                    <div className="space-y-8">
+
+                        {allAnswers.map((item, index) => (
+
+                            <div
+                                key={index}
+                                className="bg-gray-900 border border-gray-800 rounded-3xl p-8"
+                            >
+
+                                <h2 className="text-2xl font-bold text-blue-400 mb-4">
+                                    Question {index + 1}
+                                </h2>
+
+                                <p className="text-gray-300 leading-8 mb-6">
+                                    {item.question}
+                                </p>
+
+
+                                <h3 className="text-xl font-bold mb-3">
+                                    Your Answer
+                                </h3>
+
+                                <p className="text-gray-400 leading-8 mb-6">
+                                    {item.answer}
+                                </p>
+
+
+                                <div className="grid md:grid-cols-3 gap-6">
+
+
+                                    <div className="bg-green-900/30 rounded-2xl p-6">
+
+                                        <h3 className="text-xl font-bold text-green-400 mb-3">
+                                            Score
+                                        </h3>
+
+                                        <p className="text-5xl font-bold">
+                                            {item.score}/10
+                                        </p>
+
+                                    </div>
+
+
+                                    <div className="bg-blue-900/30 rounded-2xl p-6">
+
+                                        <h3 className="text-xl font-bold text-blue-400 mb-3">
+                                            Feedback
+                                        </h3>
+
+                                        <p className="text-gray-300 leading-8">
+                                            {item.feedback}
+                                        </p>
+
+                                    </div>
+
+
+                                    <div className="bg-red-900/30 rounded-2xl p-6">
+
+                                        <h3 className="text-xl font-bold text-red-400 mb-3">
+                                            Improvements
+                                        </h3>
+
+                                        <p className="text-gray-300 leading-8">
+                                            {item.improvement}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        ))}
+
+                    </div>
+
+                </div>
+
+            </div>
+        );
+    }
 
     return (
 
@@ -163,14 +308,17 @@ export default function MockInterviewPage() {
                         </button>
 
 
-                        {feedback && currentQuestionIndex < questions.length - 1 && (
+                        {feedback && (
 
                             <button
                                 onClick={nextQuestion}
                                 className="bg-green-600 hover:bg-green-500 transition-all px-8 py-4 rounded-2xl text-lg font-bold"
                             >
-                                Next Question
+                                {currentQuestionIndex === questions.length - 1
+                                    ? "Finish Interview"
+                                    : "Next Question"}
                             </button>
+
                         )}
 
                     </div>
