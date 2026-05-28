@@ -13,7 +13,7 @@ export default function MockInterviewPage() {
     const [allAnswers, setAllAnswers] = useState([]);
     const [selectedRole, setSelectedRole] = useState("");
     const [totalScore, setTotalScore] = useState(0);
-
+    const [dynamicQuestionCount, setDynamicQuestionCount] = useState(0);
     const [interviewCompleted, setInterviewCompleted] = useState(false);
     useEffect(() => {
 
@@ -54,6 +54,26 @@ export default function MockInterviewPage() {
             );
 
             setFeedback(res.data);
+            if (
+                res.data.followUpQuestion &&
+                dynamicQuestionCount < 3
+            ) {
+
+                setQuestions((prev) => {
+
+                    const updatedQuestions = [...prev];
+
+                    updatedQuestions.splice(
+                        currentQuestionIndex + 1,
+                        0,
+                        res.data.followUpQuestion
+                    );
+
+                    return updatedQuestions;
+                });
+
+                setDynamicQuestionCount((prev) => prev + 1);
+            }
             setAllAnswers((prev) => [
                 ...prev,
                 {

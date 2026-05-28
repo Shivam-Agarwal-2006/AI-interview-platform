@@ -19,32 +19,43 @@ exports.evaluateAnswer = async (req, res) => {
         }
 
 
-        const prompt = `
-You are a technical interviewer.
+      const prompt = `
+You are an expert technical interviewer conducting a real interview.
 
-Evaluate the candidate's answer.
 Interview Role:
 ${role}
+
 Question:
 ${question}
 
-Answer:
+Candidate Answer:
 ${answer}
 
-Respond ONLY in valid JSON format.
+Evaluate the answer professionally.
 
-Format:
+Also generate ONE intelligent follow-up question based on the candidate's answer.
+
+The follow-up question should:
+- dig deeper technically
+- ask for reasoning
+- ask about tradeoffs
+- ask implementation details
+- feel like a real interviewer
+
+Respond ONLY with raw valid JSON.
 
 {
   "score": number,
-  "feedback": "string",
-  "improvement": "string"
+  "feedback": "",
+  "improvement": "",
+  "followUpQuestion": ""
 }
 
 Rules:
-- score should be out of 10
-- feedback should explain what was good
-- improvement should explain what can be improved
+- score out of 10
+- feedback concise
+- improvement concise
+- followUpQuestion must be realistic and technical
 `;
 
 
