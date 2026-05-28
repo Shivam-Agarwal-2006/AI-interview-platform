@@ -17,6 +17,8 @@ export default function Dashboard() {
     const [analysis, setAnalysis] = useState(null);
 
     const [history, setHistory] = useState([]);
+    const selectedRole =
+        localStorage.getItem("selectedRole");
     useEffect(() => {
 
         const token = localStorage.getItem("token");
@@ -47,7 +49,8 @@ export default function Dashboard() {
             const formData = new FormData();
             const token = localStorage.getItem("token");
             formData.append("resume", file);
-
+            const selectedRole = localStorage.getItem("selectedRole");
+            formData.append("role", selectedRole);
             const res = await axios.post(
                 "http://localhost:5000/api/resume/upload",
                 formData,
@@ -143,7 +146,12 @@ export default function Dashboard() {
                 <h2 className="text-3xl font-bold mb-6 text-black">
                     Upload Resume
                 </h2>
-
+                <h2 className="text-2xl font-bold mb-6">
+                    Preparing for:
+                    <span className="text-blue-500">
+                        {" "} {selectedRole}
+                    </span>
+                </h2>
                 <input
                     type="file"
                     accept=".pdf"

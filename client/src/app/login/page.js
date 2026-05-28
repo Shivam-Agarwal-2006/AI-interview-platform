@@ -42,7 +42,7 @@ export default function LoginPage() {
 
             alert("Login Successful");
 
-            router.push("/dashboard");
+            router.push("/select-role");
 
         } catch (error) {
 

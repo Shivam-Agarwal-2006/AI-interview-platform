@@ -9,7 +9,7 @@ exports.evaluateAnswer = async (req, res) => {
 
     try {
 
-        const { question, answer } = req.body;
+        const { question, answer, role } = req.body;
 
         if (!question || !answer) {
 
@@ -23,7 +23,8 @@ exports.evaluateAnswer = async (req, res) => {
 You are a technical interviewer.
 
 Evaluate the candidate's answer.
-
+Interview Role:
+${role}
 Question:
 ${question}
 

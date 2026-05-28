@@ -11,7 +11,7 @@ export default function MockInterviewPage() {
     const [feedback, setFeedback] = useState(null);
     const [loading, setLoading] = useState(false);
     const [allAnswers, setAllAnswers] = useState([]);
-
+    const [selectedRole, setSelectedRole] = useState("");
     const [totalScore, setTotalScore] = useState(0);
 
     const [interviewCompleted, setInterviewCompleted] = useState(false);
@@ -44,6 +44,7 @@ export default function MockInterviewPage() {
                 {
                     question: questions[currentQuestionIndex],
                     answer,
+                    role: selectedRole,
                 },
                 {
                     headers: {
@@ -93,7 +94,14 @@ export default function MockInterviewPage() {
         setCurrentQuestionIndex((prev) => prev + 1);
     };
 
-
+    const roles = [
+        "Frontend Developer",
+        "Backend Developer",
+        "Full Stack Developer",
+        "DSA Interview",
+        "HR Interview",
+        "Machine Learning Engineer",
+    ];
     if (questions.length === 0) {
 
         return (
@@ -251,7 +259,29 @@ export default function MockInterviewPage() {
                     </p>
 
                 </div>
+                <div className="mt-6">
 
+                    <select
+                        value={selectedRole}
+                        onChange={(e) => setSelectedRole(e.target.value)}
+                        className="bg-gray-900 border border-gray-700 px-5 py-3 rounded-2xl text-white outline-none"
+                    >
+
+                        <option value="">
+                            Select Interview Role
+                        </option>
+
+                        {roles.map((role, index) => (
+
+                            <option key={index} value={role}>
+                                {role}
+                            </option>
+
+                        ))}
+
+                    </select>
+
+                </div>
 
                 {/* QUESTION CARD */}
 

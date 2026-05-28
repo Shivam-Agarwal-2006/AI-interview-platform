@@ -26,7 +26,7 @@ exports.uploadResume = async (req, res) => {
         const pdfData = await pdfParse(dataBuffer);
 
         const resumeText = pdfData.text;
-
+        const role = req.body.role;
 
 
         // prompt
@@ -51,7 +51,8 @@ Return:
 Rules:
 - score should be out of 100
 - category scores should be out of 100
-- generate 5 interview questions
+- Generate 5 interview questions specifically for a ${role} role.
+  Questions should match the role requirements and technologies commonly asked in interviews.
 - generate 3 strengths
 - generate 3 weaknesses
 - generate 3 suitable roles
