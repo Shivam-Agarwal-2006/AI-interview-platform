@@ -15,6 +15,8 @@ export default function MockInterviewPage() {
     const [totalScore, setTotalScore] = useState(0);
     const [dynamicQuestionCount, setDynamicQuestionCount] = useState(0);
     const [interviewCompleted, setInterviewCompleted] = useState(false);
+    const [isListening, setIsListening] = useState(false);
+    const [recognition, setRecognition] = useState(null);
     useEffect(() => {
 
         const savedAnalysis = localStorage.getItem("analysis");
@@ -27,7 +29,58 @@ export default function MockInterviewPage() {
         }
 
     }, []);
+    useEffect(() => {
 
+        if (
+            typeof window !== "undefined" &&
+            ("webkitSpeechRecognition" in window ||
+                "SpeechRecognition" in window)
+        ) {
+
+            const SpeechRecognition =
+                window.SpeechRecognition ||
+                window.webkitSpeechRecognition;
+
+            const recognitionInstance =
+                new SpeechRecognition();
+
+            recognitionInstance.continuous = true;
+
+            recognitionInstance.interimResults = false;
+
+            recognitionInstance.lang = "en-US";
+
+            recognitionInstance.onstart = () => {
+
+                setIsListening(true);
+            };
+
+            recognitionInstance.onend = () => {
+
+                setIsListening(false);
+            };
+
+            recognitionInstance.onresult = (event) => {
+
+                let transcript = "";
+
+                for (
+                    let i = event.resultIndex;
+                    i < event.results.length;
+                    i++
+                ) {
+
+                    transcript +=
+                        event.results[i][0].transcript + " ";
+                }
+
+                setAnswer((prev) => prev + transcript);
+            };
+
+            setRecognition(recognitionInstance);
+        }
+
+    }, []);
 
     const handleSubmitAnswer = async () => {
 
@@ -113,7 +166,22 @@ export default function MockInterviewPage() {
 
         setCurrentQuestionIndex((prev) => prev + 1);
     };
+    const startListening = () => {
 
+        if (recognition) {
+
+            recognition.start();
+        }
+    };
+    const stopListening = () => {
+
+        if (recognition) {
+
+            recognition.stop();
+
+            setIsListening(false);
+        }
+    };
     const roles = [
         "Frontend Developer",
         "Backend Developer",
@@ -348,7 +416,25 @@ export default function MockInterviewPage() {
                     {/* BUTTONS */}
 
                     <div className="flex gap-5 mt-8">
+                        {!isListening ? (
 
+                            <button
+                                onClick={startListening}
+                                className="bg-purple-600 hover:bg-purple-500 transition-all px-8 py-4 rounded-2xl text-lg font-bold"
+                            >
+                                🎤 Start Speaking
+                            </button>
+
+                        ) : (
+
+                            <button
+                                onClick={stopListening}
+                                className="bg-red-600 hover:bg-red-500 transition-all px-8 py-4 rounded-2xl text-lg font-bold"
+                            >
+                                Stop Recording
+                            </button>
+
+                        )}
                         <button
                             onClick={handleSubmitAnswer}
                             disabled={loading}
