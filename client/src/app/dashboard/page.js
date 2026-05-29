@@ -17,8 +17,7 @@ export default function Dashboard() {
     const [analysis, setAnalysis] = useState(null);
 
     const [history, setHistory] = useState([]);
-    const selectedRole =
-        localStorage.getItem("selectedRole");
+    const [selectedRole, setSelectedRole] = useState("");
     useEffect(() => {
 
         const token = localStorage.getItem("token");
@@ -31,6 +30,13 @@ export default function Dashboard() {
 
         if (storedUser) {
             setUser(JSON.parse(storedUser));
+        }
+        const role =
+            localStorage.getItem("selectedRole");
+
+        if (role) {
+
+            setSelectedRole(role);
         }
         fetchHistory();
     }, []);

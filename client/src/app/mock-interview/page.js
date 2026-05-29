@@ -81,7 +81,19 @@ export default function MockInterviewPage() {
         }
 
     }, []);
+    useEffect(() => {
 
+        if (
+            questions.length > 0 &&
+            questions[currentQuestionIndex]
+        ) {
+
+            speakQuestion(
+                questions[currentQuestionIndex]
+            );
+        }
+
+    }, [currentQuestionIndex]);
     const handleSubmitAnswer = async () => {
 
         if (!answer) return;
@@ -91,7 +103,7 @@ export default function MockInterviewPage() {
             setLoading(true);
 
             const token = localStorage.getItem("token");
-
+            window.speechSynthesis.cancel();
             const res = await axios.post(
                 "http://localhost:5000/api/interview/evaluate",
                 {
@@ -181,6 +193,22 @@ export default function MockInterviewPage() {
 
             setIsListening(false);
         }
+    };
+    const speakQuestion = (text) => {
+
+        if (!text) return;
+
+        const speech = new SpeechSynthesisUtterance(text);
+
+        speech.lang = "en-US";
+
+        speech.rate = 1;
+
+        speech.pitch = 1;
+
+        speech.volume = 1;
+
+        window.speechSynthesis.speak(speech);
     };
     const roles = [
         "Frontend Developer",
