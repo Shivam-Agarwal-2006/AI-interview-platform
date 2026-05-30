@@ -388,13 +388,20 @@ export default function Dashboard() {
 
                 </div>
             )}
-            <div className="mt-10 flex justify-center">
+            <div className="mt-10 flex justify-center gap-4">
 
                 <button
-                    onClick={() => window.location.href = "/mock-interview"}
+                    onClick={() => router.push("/mock-interview")}
                     className="bg-black text-white px-10 py-4 rounded-xl text-xl font-semibold hover:bg-gray-800"
                 >
                     Start Mock Interview
+                </button>
+
+                <button
+                    onClick={() => router.push("/history")}
+                    className="bg-purple-600 text-white px-10 py-4 rounded-xl text-xl font-semibold hover:bg-purple-700"
+                >
+                    Interview History
                 </button>
 
             </div>

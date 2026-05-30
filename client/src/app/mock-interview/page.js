@@ -94,7 +94,7 @@ export default function MockInterviewPage() {
             );
         }
 
-    }, [currentQuestionIndex]);
+    }, [currentQuestionIndex, questions.length]);
     const handleSubmitAnswer = async () => {
 
         if (!answer) return;
@@ -165,13 +165,44 @@ export default function MockInterviewPage() {
         }
     };
 
+    const saveInterviewResult = async () => {
 
+        try {
+
+            const token =
+                localStorage.getItem("token");
+
+            await axios.post(
+                "http://localhost:5000/api/interview-results/save",
+                {
+                    role: selectedRole,
+                    company: selectedCompany,
+                    averageScore:
+                        totalScore / questions.length,
+                    totalQuestions:
+                        questions.length,
+                },
+                {
+                    headers: {
+                        Authorization:
+                            `Bearer ${token}`,
+                    },
+                }
+            );
+
+        } catch (error) {
+
+            console.log(
+                "Failed to save interview",
+                error
+            );
+        }
+    };
     const nextQuestion = () => {
 
         if (currentQuestionIndex === questions.length - 1) {
-
+            saveInterviewResult();
             setInterviewCompleted(true);
-
             return;
         }
 
