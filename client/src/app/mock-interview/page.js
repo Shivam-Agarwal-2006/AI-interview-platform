@@ -17,6 +17,7 @@ export default function MockInterviewPage() {
     const [interviewCompleted, setInterviewCompleted] = useState(false);
     const [isListening, setIsListening] = useState(false);
     const [recognition, setRecognition] = useState(null);
+    const [selectedCompany, setSelectedCompany] = useState("");
     useEffect(() => {
 
         const savedAnalysis = localStorage.getItem("analysis");
@@ -110,6 +111,7 @@ export default function MockInterviewPage() {
                     question: questions[currentQuestionIndex],
                     answer,
                     role: selectedRole,
+                    company: selectedCompany,
                 },
                 {
                     headers: {
@@ -210,6 +212,13 @@ export default function MockInterviewPage() {
 
         window.speechSynthesis.speak(speech);
     };
+    const companies = [
+        "General",
+        "Google",
+        "Amazon",
+        "Microsoft",
+        "Meta",
+    ];
     const roles = [
         "Frontend Developer",
         "Backend Developer",
@@ -398,7 +407,34 @@ export default function MockInterviewPage() {
                     </select>
 
                 </div>
+                <div className="mt-4">
 
+                    <select
+                        value={selectedCompany}
+                        onChange={(e) =>
+                            setSelectedCompany(e.target.value)
+                        }
+                        className="bg-gray-900 border border-gray-700 px-5 py-3 rounded-2xl text-white outline-none"
+                    >
+
+                        <option value="">
+                            Select Company
+                        </option>
+
+                        {companies.map((company, index) => (
+
+                            <option
+                                key={index}
+                                value={company}
+                            >
+                                {company}
+                            </option>
+
+                        ))}
+
+                    </select>
+
+                </div>
                 {/* QUESTION CARD */}
 
                 <div className="bg-gray-900 border border-gray-800 rounded-3xl p-8 shadow-2xl mb-8">

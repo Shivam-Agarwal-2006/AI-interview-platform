@@ -9,7 +9,7 @@ exports.evaluateAnswer = async (req, res) => {
 
     try {
 
-        const { question, answer, role } = req.body;
+        const { question, answer, role, company } = req.body;
 
         if (!question || !answer) {
 
@@ -19,7 +19,7 @@ exports.evaluateAnswer = async (req, res) => {
         }
 
 
-      const prompt = `
+        const prompt = `
 You are an expert technical interviewer conducting a real interview.
 
 Interview Role:
@@ -30,7 +30,8 @@ ${question}
 
 Candidate Answer:
 ${answer}
-
+Company:
+${company}
 Evaluate the answer professionally.
 
 Also generate ONE intelligent follow-up question based on the candidate's answer.
@@ -40,7 +41,30 @@ The follow-up question should:
 - ask for reasoning
 - ask about tradeoffs
 - ask implementation details
-- feel like a real interviewer
+
+Generate follow-up questions according to the company's interview style.
+
+Google:
+- deep technical reasoning
+- system design thinking
+- tradeoffs
+
+Amazon:
+- leadership principles
+- ownership
+- behavioral examples
+
+Microsoft:
+- collaboration
+- problem solving
+
+Meta:
+- performance
+- scalability
+- execution
+
+General:
+- normal technical interviews
 
 Respond ONLY with raw valid JSON.
 
